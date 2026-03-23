@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2] - 2026-03-23
+
+### Changed
+- Implement real `cost_summary` runner: aggregates metering_records by worker_id/provider/model_id with token sums when legion-data is connected
+- Returns `{ error: 'data_unavailable' }` when metering tables are not present (replaces static note placeholder)
+- Column allowlist (`SUMMARY_COLUMNS`) prevents SQL injection in group_by parameter
+
 ## [0.1.1] - 2026-03-22
 
 ### Changed

@@ -31,9 +31,14 @@ RSpec.describe Legion::Extensions::Finops::Runners::CostAttribution do
   end
 
   describe '#cost_summary' do
-    it 'returns summary placeholder' do
+    it 'returns data_unavailable error when legion-data is not connected' do
       result = host.cost_summary(group_by: :worker_id)
-      expect(result[:group_by]).to eq(:worker_id)
+      expect(result[:error]).to eq('data_unavailable')
+    end
+
+    it 'sanitizes group_by to allowed columns' do
+      result = host.cost_summary(group_by: :password)
+      expect(result[:error]).to eq('data_unavailable')
     end
   end
 end

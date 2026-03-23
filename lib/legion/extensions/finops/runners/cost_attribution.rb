@@ -27,11 +27,36 @@ module Legion
             record
           end
 
-          def cost_summary(group_by: :tenant_id, **)
-            { group_by: group_by, note: 'requires legion-data metering tables for full aggregation' }
+          SUMMARY_COLUMNS = %i[worker_id provider model_id].freeze
+
+          def cost_summary(group_by: :worker_id, since: nil, limit: 20, **)
+            return { error: 'data_unavailable' } unless metering_available?
+
+            col = SUMMARY_COLUMNS.include?(group_by.to_sym) ? group_by.to_sym : :worker_id
+            rows = aggregate_metering(col, since: since, limit: limit)
+            { group_by: col, rows: rows, count: rows.size }
           end
 
           private
+
+          def aggregate_metering(col, since:, limit:)
+            ds = Legion::Data.connection[:metering_records]
+            ds = ds.where { recorded_at >= since } if since
+            ds.group_and_count(col)
+              .select_append { sum(input_tokens).as(total_input) }
+              .select_append { sum(output_tokens).as(total_output) }
+              .select_append { sum(total_tokens).as(total_tokens) }
+              .order(Sequel.desc(:count))
+              .limit(limit)
+              .all
+          end
+
+          def metering_available?
+            defined?(Legion::Data) && Legion::Data.respond_to?(:connection) &&
+              Legion::Data.connection&.table_exists?(:metering_records)
+          rescue StandardError
+            false
+          end
 
           def emit_attribution(record)
             Legion::Events.emit('finops.cost_attributed', record)
