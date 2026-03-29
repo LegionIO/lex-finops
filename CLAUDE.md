@@ -7,7 +7,7 @@
 Budget enforcement, cost attribution, and FinOps reporting for LegionIO. Enforces monthly per-worker and per-tenant spending limits, records actual spend, and fires budget alert events via `Legion::Events`.
 
 **Gem**: `lex-finops`
-**Version**: 0.1.0
+**Version**: 0.1.2
 **Namespace**: `Legion::Extensions::Finops`
 
 ## File Structure
