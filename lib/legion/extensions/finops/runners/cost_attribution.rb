@@ -5,7 +5,9 @@ module Legion
     module Finops
       module Runners
         module CostAttribution
-          def attribute_cost(worker_id:, provider:, model:, input_tokens:,
+          extend self
+
+          def attribute_cost(worker_id:, provider:, model:, input_tokens:, # rubocop:disable Metrics/ParameterLists
                              output_tokens:, tenant_id: nil, team: nil,
                              task_id: nil, extension: nil, thinking_tokens: 0, **)
             cost = Helpers::CostCalculator.estimate_cost(
@@ -54,7 +56,7 @@ module Legion
           def metering_available?
             defined?(Legion::Data) && Legion::Data.respond_to?(:connection) &&
               Legion::Data.connection&.table_exists?(:metering_records)
-          rescue StandardError
+          rescue StandardError => _e
             false
           end
 

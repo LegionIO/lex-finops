@@ -11,7 +11,7 @@ module Legion
           ALERT_THRESHOLDS = [50, 75, 90, 100].freeze
 
           @mutex = Mutex.new
-          @budgets = {}
+          @budgets = {} # rubocop:disable ThreadSafety/MutableClassInstanceVariable
 
           module_function
 
