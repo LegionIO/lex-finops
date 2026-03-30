@@ -5,6 +5,8 @@ module Legion
     module Finops
       module Runners
         module Budget
+          extend self
+
           def check_budget(worker_id:, tenant_id: nil, estimated_cost: 0, **)
             period_key = Time.now.utc.strftime('%Y-%m')
             results = []

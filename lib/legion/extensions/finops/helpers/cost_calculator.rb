@@ -33,7 +33,7 @@ module Legion
           def finops_settings
             settings = Legion::Settings[:finops]
             settings.is_a?(Hash) ? settings : {}
-          rescue StandardError
+          rescue StandardError => _e
             {}
           end
         end

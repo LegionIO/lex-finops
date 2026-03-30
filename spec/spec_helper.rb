@@ -13,7 +13,7 @@ require 'legion/transport/helper'
 module Legion
   # Test helpers for Legion::Settings (not part of the gem's public API)
   module Settings
-    @_test_overrides = {}
+    @_test_overrides = {} # rubocop:disable ThreadSafety/MutableClassInstanceVariable
 
     class << self
       def []=(key, val)
